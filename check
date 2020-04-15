@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+input=$(jq . <&0)
+
+version=$(jq -r .version.last_modified_gmt_id <<< "$input")
+username=$(jq -r .source.username <<< "$input")
+password=$(jq -r .source.password <<< "$input")
+
+echo "$password" | LPASS_DISABLE_PINENTRY=1 lpass login --trust --force "$username" >/dev/null
+
+all_ids=$(lpass ls --format="%ai" | awk '{print $1}')
+if [ -z "$all_ids" ]; then
+  echo '[]'
+  exit 0
+fi
+
+# provide the password to the 'show' command because of password protected entries
+# if we didn't we would run into https://github.com/lastpass/lastpass-cli/blob/df182dd7c04715f1b18f5ff3a8074e198fc1d06c/cmd-show.c#L431
+show_cmd=$(xargs echo lpass show --json <<< "$all_ids")
+all_items=$(echo "$password" | LPASS_DISABLE_PINENTRY=1 bash -c "$show_cmd")
+
+all_items_sorted=$(jq 'sort_by(.last_modified_gmt, .id)' <<< "$all_items")
+
+if [[ $version == "null" ]]; then
+  # return current version on first request
+  current_item=$(jq '.[-1]' <<< "$all_items_sorted")
+  current_item_last_modified_gmt=$(jq -r '.last_modified_gmt' <<< "$current_item")
+  current_item_id=$(jq -r '.id' <<< "$current_item")
+  current_version="${current_item_last_modified_gmt}_${current_item_id}"
+  jq -n "[{last_modified_gmt_id : \"$current_version\" }]"
+  exit 0
+fi
+
+v_last_modified_gmt=${version%_*}
+v_id=${version#*_}
+
+new_items=$(jq "[ .[] | select( (.last_modified_gmt | tonumber > $v_last_modified_gmt) or ((.last_modified_gmt | tonumber == $v_last_modified_gmt) and (.id | tonumber >= $v_id)) ) ]" <<< "$all_items_sorted")
+jq '[ .[] | {last_modified_gmt_id : "\(.last_modified_gmt)_\(.id)"} ]' <<< "$new_items"

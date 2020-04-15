@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+destination_dir="$1"
+input=$(jq . <&0)
+username=$(jq -r .source.username <<< "$input")
+password=$(jq -r .source.password <<< "$input")
+version=$(jq -r .version.last_modified_gmt_id <<< "$input")
+v_last_modified_gmt=${version%_*}
+v_id=${version#*_}
+
+echo "$password" | LPASS_DISABLE_PINENTRY=1 lpass login --trust --force "$username" >/dev/null
+
+item=$(lpass show --json "$v_id" | jq .[0])
+
+item_last_modified_gmt=$(jq -r .last_modified_gmt <<< "$item")
+if [[ "$item_last_modified_gmt" != "$v_last_modified_gmt" ]]; then
+  echo -n "Account with id=$v_id has last_modified_gmt=$item_last_modified_gmt " >&2 
+  echo "(requested last_modified_gmt=$v_last_modified_gmt is outdated)" >&2
+  exit 1
+fi
+
+mkdir -p "$destination_dir"
+echo "$item" > "$destination_dir/item"
+
+jq -n "
+{
+  version : { last_modified_gmt_id : \"$version\" },
+  metadata : [
+    { name : \"ID\", value : \"$v_id\"}
+  ]
+}"

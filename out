@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+jq -n '{
+  version: {last_modified_gmt_id:"0000000000_0000000000000000000"}
+}'
