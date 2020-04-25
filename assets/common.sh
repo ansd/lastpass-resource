@@ -1,5 +1,3 @@
-#!/usr/bin/env/bash
-
 lpass_login() {
   local username
   local password
