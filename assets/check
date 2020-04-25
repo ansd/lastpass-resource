@@ -2,13 +2,14 @@
 
 set -euo pipefail
 
+. "$(dirname "$0")"/common.sh
+
 input=$(jq . <&0)
 
-version=$(jq -r .version.last_modified_gmt_id <<< "$input")
-username=$(jq -r .source.username <<< "$input")
 password=$(jq -r .source.password <<< "$input")
+version=$(jq -r .version.last_modified_gmt_id <<< "$input")
 
-echo "$password" | LPASS_DISABLE_PINENTRY=1 lpass login --trust --force "$username" >/dev/null
+lpass_login "$input"
 
 all_ids=$(lpass ls --format="%ai" | awk '{print $1}')
 if [ -z "$all_ids" ]; then

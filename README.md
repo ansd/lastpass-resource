@@ -23,7 +23,7 @@ resource_types:
   type: docker-image
   source:
     repository: ansd/lastpass
-    tag: 0.1.0
+    tag: 0.1.1
 
 resources:
 - name: lpass-res

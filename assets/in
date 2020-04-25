@@ -2,15 +2,16 @@
 
 set -euo pipefail
 
+. "$(dirname "$0")"/common.sh
+
 destination_dir="$1"
 input=$(jq . <&0)
-username=$(jq -r .source.username <<< "$input")
-password=$(jq -r .source.password <<< "$input")
+
 version=$(jq -r .version.last_modified_gmt_id <<< "$input")
 v_last_modified_gmt=${version%_*}
 v_id=${version#*_}
 
-echo "$password" | LPASS_DISABLE_PINENTRY=1 lpass login --trust --force "$username" >/dev/null
+lpass_login "$input"
 
 item=$(lpass show --json "$v_id" | jq .[0])
 

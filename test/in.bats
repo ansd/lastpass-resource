@@ -10,7 +10,7 @@
 
   tmp_dir=$(mktemp -d -t lastpass-resource-XXX)
 
-  run ../in $tmp_dir < data/stdin.json
+  run ../assets/in $tmp_dir < data/stdin.json
 
   [ "$status" -eq 0 ]
 
@@ -39,7 +39,7 @@
   }
   export -f lpass
 
-  run ../in fakeDir < data/stdin.json
+  run ../assets/in fakeDir < data/stdin.json
 
   [ "$status" -eq 2 ]
   [ "$output" = "Error: Could not find specified account(s)." ]
@@ -53,7 +53,7 @@
   }
   export -f lpass
 
-  run ../in fakeDir < data/stdin.json
+  run ../assets/in fakeDir < data/stdin.json
 
   [ "$status" -eq 1 ]
   [ "$output" = "Account with id=1000000000000000033 has last_modified_gmt=0000000012 (requested last_modified_gmt=0000000011 is outdated)" ]

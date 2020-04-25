@@ -15,7 +15,7 @@ export -f lpass
   }
   export -f bash
 
-  run ../check < data/stdin.json
+  run ../assets/check < data/stdin.json
 
   [ "$status" -eq 0 ]
 
@@ -33,7 +33,7 @@ export -f lpass
   }
   export -f bash
 
-  run ../check < data/stdin.json
+  run ../assets/check < data/stdin.json
 
   [ "$status" -eq 0 ]
 
@@ -55,7 +55,7 @@ export -f lpass
   }
   export -f bash
 
-  run ../check < data/stdin.json
+  run ../assets/check < data/stdin.json
 
   [ "$status" -eq 0 ]
 
@@ -75,7 +75,7 @@ export -f lpass
   }
   export -f bash
 
-  run ../check < data/stdin-no-version.json
+  run ../assets/check < data/stdin-no-version.json
 
   [ "$status" -eq 0 ]
 
@@ -92,7 +92,7 @@ export -f lpass
     fi
   }
 
-  run ../check < data/stdin.json
+  run ../assets/check < data/stdin.json
 
   [ "$status" -eq 0 ]
   [ "$output" = '[]' ]
@@ -105,7 +105,7 @@ export -f lpass
     fi
   }
 
-  run ../check < data/stdin-no-version.json
+  run ../assets/check < data/stdin-no-version.json
 
   [ "$status" -eq 0 ]
   [ "$output" = '[]' ]

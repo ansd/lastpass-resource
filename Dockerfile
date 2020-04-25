@@ -60,5 +60,5 @@ RUN	bats .
 
 FROM	resource
 
-COPY	check	in	out	/opt/resource/
+COPY assets/*	/opt/resource/
 RUN	chmod +x /opt/resource/*
