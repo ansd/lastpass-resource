@@ -70,7 +70,7 @@ Writes the JSON representation of the item with the given `id` and `last_modifie
 ## Notes
 
 * Two-factor authentication should be disabled (unless you want to manually approve push notifications for every new Concourse LastPass resource container).
-* There is a paid plan called "LastPass Identity". With this plan, you can create a separate CI user and assign this user an [IP policy](https://www.lastpass.com/policies/ip-address) that whitelists the public IP addresses of the Concourse workers blocking all other IP addresses by default. This adds security given that two-factor authentication is disabled.
+* There is a paid plan called "LastPass Identity". With this plan, you can create a separate CI user and assign this user an [IP policy](https://www.lastpass.com/policies/ip-address) that whitelists the public IP addresses of the Concourse workers blocking all other IP addresses by default. You can also whitelist the DNS name of the Concourse workers (based on reverse DNS lookup of their IP addresses). This adds security given that two-factor authentication is disabled.
 * If you don't want to pay for "LastPass Identity", make sure to at least restrict logins to the country where the Concourse workers run in `Account Settings` -> `General` -> `Show Advanced Settings` -> `Country Restriction`.
 * If the first Concourse containers are failing you should check your inbox for e-mails with the subject `LastPass Verification Email` to verify the new location or device. You can disable e-mail verification in `Account Settings` -> `General` -> `Show Advanced Settings` -> `Disable Email Verification`.
 
